@@ -169,6 +169,9 @@ if(isset($_GET['id'])){
                             echo "<br>";
                             echo "<label><b>Nome:</b>&nbsp;</label>";
                             echo utf8_decode($cliente->getNome());
+                            echo "<br>";
+                            echo "<label><b>Email:</b>&nbsp;</label>";
+                            echo utf8_decode($cliente->getEmail());
                         }
                     ?>
                 <br>
