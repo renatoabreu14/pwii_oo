@@ -2,6 +2,7 @@
 
 require_once "../models/Cliente.class.php";
 require_once "../controllers/ControllerCliente.php";
+require_once "../controllers/ControllerEstCivil.php";
 
 $cliente = new Cliente();
 
@@ -13,6 +14,7 @@ if (isset($_POST['enviar'])){
   $cliente->setEndereco($_POST['endereco']);
   $cliente->setSexo($_POST['sexo']);
   $cliente->setProfissao($_POST['profissao']);
+  $cliente->getEstCivil()->setId($_POST['estcivil']);
   ControllerCliente::salvar($cliente);
   header('Location: lista_clientes.php');
 }
@@ -21,7 +23,7 @@ if(isset($_GET['id'])){
     $cliente = ControllerCliente::buscarCliente($_GET['id']);
 }
 
-//echo var_dump($cliente);
+$listaEstCivil = ControllerEstCivil::buscarTodos();
 
 
 ?>
@@ -222,10 +224,24 @@ if(isset($_GET['id'])){
                 </div>
               </div>
               <div class="form-group row">
-                <div class="col-12">
+                <div class="col-6">
                   <label class="label">Profissão</label>
                   <input type="text" name="profissao" placeholder="Professor" class="form-control" value="<?php echo $cliente->getProfissao();?>">
                 </div>
+                  <div class="col-6">
+                      <label class="label">Estado Civil</label>
+                      <select name="estcivil" class="form-control">
+                          <?php
+                            foreach ($listaEstCivil as $estcivil){
+                                if ($cliente->getEstCivil()->getId() == $estcivil->getId()){
+                                    echo "<option value='".$estcivil->getId()."' selected>".$estcivil->getDescricao()."</option>";
+                                }else{
+                                    echo "<option value='".$estcivil->getId()."'>".$estcivil->getDescricao()."</option>";
+                                }
+                            }
+                          ?>
+                      </select>
+                  </div>
               </div>
               <div class="form-group row">
                 <button type="submit" class="btn btn-success" name="enviar">Enviar</button>&nbsp;

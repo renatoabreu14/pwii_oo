@@ -172,6 +172,8 @@ if(isset($_GET['id'])){
                             echo "<br>";
                             echo "<label><b>Email:</b>&nbsp;</label>";
                             echo utf8_decode($cliente->getEmail());
+                            echo "<label><b>Estado Civil:</b>&nbsp;</label>";
+                            echo utf8_decode($cliente->getEstCivil()->getDescricao());
                         }
                     ?>
                 <br>

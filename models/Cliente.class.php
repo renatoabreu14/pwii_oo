@@ -1,4 +1,6 @@
 <?php
+require_once "EstCivil.class.php";
+
 class Cliente{
     private $id;
     private $nome;
@@ -7,6 +9,7 @@ class Cliente{
     private $endereco;
     private $sexo;
     private $profissao;
+    private $estCivil;
 
     /**
      * Cliente constructor.
@@ -15,6 +18,7 @@ class Cliente{
     public function __construct()
     {
         $this->id = 0;
+        $this->estCivil = new EstCivil();
     }
 
 
@@ -130,7 +134,21 @@ class Cliente{
         $this->profissao = $profissao;
     }
 
+    /**
+     * @return EstCivil
+     */
+    public function getEstCivil()
+    {
+        return $this->estCivil;
+    }
 
+    /**
+     * @param EstCivil $estCivil
+     */
+    public function setEstCivil($estCivil)
+    {
+        $this->estCivil = $estCivil;
+    }
 
 
 }

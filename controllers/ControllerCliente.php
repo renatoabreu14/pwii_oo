@@ -16,7 +16,7 @@ class ControllerCliente{
     private static function alterar(Cliente $cliente){
         try{
             $sql = "UPDATE cliente SET nome = :nome, email = :email, telefone = :telefone, ";
-            $sql .= "endereco = :endereco, sexo = :sexo, profissao = :profissao WHERE id = :id";
+            $sql .= "endereco = :endereco, sexo = :sexo, profissao = :profissao, fkIdEstCivil=:estcivil WHERE id = :id";
             $p_sql = Conexao::getInstance()->prepare($sql);
             $p_sql->bindValue(":nome", $cliente->getNome());
             $p_sql->bindValue(":email", $cliente->getEmail());
@@ -24,6 +24,7 @@ class ControllerCliente{
             $p_sql->bindValue(":endereco", $cliente->getEndereco());
             $p_sql->bindValue(":sexo", $cliente->getSexo());
             $p_sql->bindValue(":profissao", $cliente->getProfissao());
+            $p_sql->bindValue(":estcivil", $cliente->getEstCivil()->getId());
             $p_sql->bindValue(":id", $cliente->getId());
 
             return $p_sql->execute();
@@ -35,13 +36,14 @@ class ControllerCliente{
     private static function inserir(Cliente $cliente){
 
         try {
-            $sql = "INSERT INTO cliente (nome, email, telefone, endereco, sexo, profissao) VALUES (";
+            $sql = "INSERT INTO cliente (nome, email, telefone, endereco, sexo, profissao, fkIdEstCivil) VALUES (";
             $sql .= ":nome,";
             $sql .= ":email,";
             $sql .= ":telefone,";
             $sql .= ":endereco,";
             $sql .= ":sexo,";
-            $sql .= ":profissao)";
+            $sql .= ":profissao,";
+            $sql .= ":estcivil)";
 
             $p_sql = Conexao::getInstance()->prepare($sql);
             $p_sql->bindValue(":nome", $cliente->getNome());
@@ -50,6 +52,7 @@ class ControllerCliente{
             $p_sql->bindValue(":endereco", $cliente->getEndereco());
             $p_sql->bindValue(":sexo", $cliente->getSexo());
             $p_sql->bindValue(":profissao", $cliente->getProfissao());
+            $p_sql->bindValue(":estcivil", $cliente->getEstCivil()->getId());
 
             return $p_sql->execute();
         }catch (Exception $e){
@@ -70,7 +73,7 @@ class ControllerCliente{
 
     public static function buscarTodos(){
         try{
-            $sql = "SELECT * FROM cliente ORDER BY nome";
+            $sql = "SELECT c.*, ec.descricao FROM cliente c INNER JOIN est_civil ec ON ec.id = c.fkIdEstCivil ORDER BY nome";
             $resultado = Conexao::getInstance()->query($sql);
             $lista = $resultado->fetchAll(PDO::FETCH_ASSOC);
 
@@ -88,7 +91,7 @@ class ControllerCliente{
 
     public static function buscarCliente($id){
         try{
-            $sql = "SELECT * FROM cliente WHERE id = :id";
+            $sql = "SELECT c.*, ec.descricao FROM cliente c INNER JOIN est_civil ec ON ec.id = c.fkIdEstCivil WHERE c.id = :id";
             $p_sql = Conexao::getInstance()->prepare($sql);
             $p_sql->bindValue(":id", $id);
             $p_sql->execute();
@@ -116,6 +119,8 @@ class ControllerCliente{
         $cliente->setEndereco($itemLista['endereco']);
         $cliente->setSexo($itemLista['sexo']);
         $cliente->setProfissao($itemLista['profissao']);
+        $cliente->getEstCivil()->setId($itemLista['fkIdEstCivil']);
+        $cliente->getEstCivil()->setDescricao($itemLista['descricao']);
         return $cliente;
     }
 
