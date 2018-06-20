@@ -16,14 +16,14 @@ class ControllerCliente{
     private static function alterar(Cliente $cliente){
         try{
             $sql = "UPDATE cliente SET nome = :nome, email = :email, telefone = :telefone, ";
-            $sql .= "endereco = :endereco, sexo = :sexo, profissao = :profissao, fkIdEstCivil=:estcivil WHERE id = :id";
+            $sql .= "endereco = :endereco, sexo = :sexo, fkIdProfissao = :profissao, fkIdEstCivil=:estcivil WHERE id = :id";
             $p_sql = Conexao::getInstance()->prepare($sql);
-            $p_sql->bindValue(":nome", $cliente->getNome());
+            $p_sql->bindValue(":nome", utf8_encode($cliente->getNome()));
             $p_sql->bindValue(":email", $cliente->getEmail());
             $p_sql->bindValue(":telefone", $cliente->getTelefone());
             $p_sql->bindValue(":endereco", $cliente->getEndereco());
             $p_sql->bindValue(":sexo", $cliente->getSexo());
-            $p_sql->bindValue(":profissao", $cliente->getProfissao());
+            $p_sql->bindValue(":profissao", $cliente->getProfissao()->getId());
             $p_sql->bindValue(":estcivil", $cliente->getEstCivil()->getId());
             $p_sql->bindValue(":id", $cliente->getId());
 
@@ -36,7 +36,7 @@ class ControllerCliente{
     private static function inserir(Cliente $cliente){
 
         try {
-            $sql = "INSERT INTO cliente (nome, email, telefone, endereco, sexo, profissao, fkIdEstCivil) VALUES (";
+            $sql = "INSERT INTO cliente (nome, email, telefone, endereco, sexo, fkIdProfissao, fkIdEstCivil) VALUES (";
             $sql .= ":nome,";
             $sql .= ":email,";
             $sql .= ":telefone,";
@@ -46,12 +46,12 @@ class ControllerCliente{
             $sql .= ":estcivil)";
 
             $p_sql = Conexao::getInstance()->prepare($sql);
-            $p_sql->bindValue(":nome", $cliente->getNome());
+            $p_sql->bindValue(":nome", utf8_encode($cliente->getNome()));
             $p_sql->bindValue(":email", $cliente->getEmail());
             $p_sql->bindValue(":telefone", $cliente->getTelefone());
             $p_sql->bindValue(":endereco", $cliente->getEndereco());
             $p_sql->bindValue(":sexo", $cliente->getSexo());
-            $p_sql->bindValue(":profissao", $cliente->getProfissao());
+            $p_sql->bindValue(":profissao", $cliente->getProfissao()->getId());
             $p_sql->bindValue(":estcivil", $cliente->getEstCivil()->getId());
 
             return $p_sql->execute();
@@ -73,7 +73,7 @@ class ControllerCliente{
 
     public static function buscarTodos(){
         try{
-            $sql = "SELECT c.*, ec.descricao FROM cliente c INNER JOIN est_civil ec ON ec.id = c.fkIdEstCivil ORDER BY nome";
+            $sql = "SELECT c.*, ec.descricao estcivil, p.descricao profissao FROM cliente c INNER JOIN est_civil ec ON ec.id = c.fkIdEstCivil INNER JOIN profissao p ON p.id = c.fkIdProfissao ORDER BY nome";
             $resultado = Conexao::getInstance()->query($sql);
             $lista = $resultado->fetchAll(PDO::FETCH_ASSOC);
 
@@ -91,7 +91,7 @@ class ControllerCliente{
 
     public static function buscarCliente($id){
         try{
-            $sql = "SELECT c.*, ec.descricao FROM cliente c INNER JOIN est_civil ec ON ec.id = c.fkIdEstCivil WHERE c.id = :id";
+            $sql = "SELECT c.*, ec.descricao estcivil, p.descricao profissao FROM cliente c INNER JOIN est_civil ec ON ec.id = c.fkIdEstCivil INNER JOIN profissao p ON p.id = c.fkIdProfissao WHERE c.id = :id";
             $p_sql = Conexao::getInstance()->prepare($sql);
             $p_sql->bindValue(":id", $id);
             $p_sql->execute();
@@ -118,9 +118,10 @@ class ControllerCliente{
         $cliente->setTelefone($itemLista['telefone']);
         $cliente->setEndereco($itemLista['endereco']);
         $cliente->setSexo($itemLista['sexo']);
-        $cliente->setProfissao($itemLista['profissao']);
+        $cliente->getProfissao()->setId($itemLista['fkIdProfissao']);
+        $cliente->getProfissao()->setDescricao($itemLista['profissao']);
         $cliente->getEstCivil()->setId($itemLista['fkIdEstCivil']);
-        $cliente->getEstCivil()->setDescricao($itemLista['descricao']);
+        $cliente->getEstCivil()->setDescricao($itemLista['estcivil']);
         return $cliente;
     }
 

@@ -3,6 +3,7 @@
 require_once "../models/Cliente.class.php";
 require_once "../controllers/ControllerCliente.php";
 require_once "../controllers/ControllerEstCivil.php";
+require_once "../controllers/ControllerProfissao.php";
 
 $cliente = new Cliente();
 
@@ -13,7 +14,7 @@ if (isset($_POST['enviar'])){
   $cliente->setTelefone($_POST['telefone']);
   $cliente->setEndereco($_POST['endereco']);
   $cliente->setSexo($_POST['sexo']);
-  $cliente->setProfissao($_POST['profissao']);
+  $cliente->getProfissao()->setId($_POST['profissao']);
   $cliente->getEstCivil()->setId($_POST['estcivil']);
   ControllerCliente::salvar($cliente);
   header('Location: lista_clientes.php');
@@ -24,6 +25,7 @@ if(isset($_GET['id'])){
 }
 
 $listaEstCivil = ControllerEstCivil::buscarTodos();
+$listaProfissao = ControllerProfissao::buscarTodos();
 
 
 ?>
@@ -226,7 +228,17 @@ $listaEstCivil = ControllerEstCivil::buscarTodos();
               <div class="form-group row">
                 <div class="col-6">
                   <label class="label">Profissão</label>
-                  <input type="text" name="profissao" placeholder="Professor" class="form-control" value="<?php echo $cliente->getProfissao();?>">
+                    <select name="profissao" class="form-control">
+                        <?php
+                        foreach ($listaProfissao as $profissao){
+                            if ($cliente->getProfissao()->getId() == $profissao->getId()){
+                                echo "<option value='".$profissao->getId()."' selected>".$profissao->getDescricao()."</option>";
+                            }else{
+                                echo "<option value='".$profissao->getId()."'>".$profissao->getDescricao()."</option>";
+                            }
+                        }
+                        ?>
+                    </select>
                 </div>
                   <div class="col-6">
                       <label class="label">Estado Civil</label>

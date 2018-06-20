@@ -1,5 +1,6 @@
 <?php
 require_once "EstCivil.class.php";
+require_once "Profissao.class.php";
 
 class Cliente{
     private $id;
@@ -8,8 +9,8 @@ class Cliente{
     private $telefone;
     private $endereco;
     private $sexo;
-    private $profissao;
     private $estCivil;
+    private $profissao;
 
     /**
      * Cliente constructor.
@@ -19,6 +20,7 @@ class Cliente{
     {
         $this->id = 0;
         $this->estCivil = new EstCivil();
+        $this->profissao = new Profissao();
     }
 
 
