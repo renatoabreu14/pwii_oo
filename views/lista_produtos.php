@@ -1,13 +1,14 @@
 <?php
 
-require_once "../controllers/ControllerCliente.php";
+require_once "../controllers/ControllerProduto.php";
+require_once "../controllers/verificalogin.php";
 
-$cliente = new Cliente();
 if(isset($_GET['id'])){
-    $cliente = ControllerCliente::buscarCliente($_GET['id']);
+    ControllerProduto::excluir($_GET['id']);
+    header('Location: lista_produtos.php');
 }
 
-
+$lista = ControllerProduto::buscarTodos();
 ?>
 
 <!DOCTYPE html>
@@ -161,7 +162,7 @@ if(isset($_GET['id'])){
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
-                    <i class="fa fa-fw fa-sign-out"></i>Logout</a>
+                    <i class="fa fa-fw fa-sign-out"></i>Sair</a>
             </li>
         </ul>
     </div>
@@ -178,24 +179,37 @@ if(isset($_GET['id'])){
         <div class="row">
             <div class="col-12">
                 <!-- aqui é o conteúdo do site-->
-                    <?php
-                        if ($cliente->getId() <= 0){
-                            echo "<h3>Nenhum cliente foi encontrado</h3>";
-                        }else{
-                            echo "<label class='text-dark'><b>Código:</b>&nbsp;</label>";
-                            echo utf8_decode($cliente->getId());
-                            echo "<br>";
-                            echo "<label><b>Nome:</b>&nbsp;</label>";
-                            echo utf8_decode($cliente->getNome());
-                            echo "<br>";
-                            echo "<label><b>Email:</b>&nbsp;</label>";
-                            echo utf8_decode($cliente->getEmail());
-                            echo "<label><b>Estado Civil:</b>&nbsp;</label>";
-                            echo utf8_decode($cliente->getEstCivil()->getDescricao());
-                        }
-                    ?>
+                <div class="col2">
+                    <a href="cad_produto.php" class="btn btn-success">Novo</a>
+                </div>
                 <br>
-                <a href="lista_clientes.php" class="btn btn-light">Voltar</a>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th width="40%">Descrição</th>
+                        <th width="40%">Estoque</th>
+                        <th width="20%">-</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    foreach ($lista as $produto){
+                        echo "<tr>";
+                        echo "<td width=\"40%\">".utf8_decode($produto->getDescricao())."</td>";
+                        echo "<td width=\"40%\">".$produto->getEstoque()."</td>";
+                        echo "<td width=\"20%\">";
+                        echo "<a href='lista_produtos.php?id=".$produto->getId()."' class='btn btn-light' title='Excluir' alt='Excluir'>
+                                            <img src='../svg/si-glyph-delete.svg' width='16' height='16'></a>";
+                        echo "<a href='detalhe_produto.php?id=".$produto->getId()."' class='btn btn-light' title='Detalhes' alt='Detalhes'>
+                                            <img src='../svg/si-glyph-badge-name.svg' width='16' height='16'></a>";
+                        echo "<a href='cad_produto.php?id=".$produto->getId()."' class='btn btn-light' title='Editar' alt='Editar'>
+                                            <img src='../svg/si-glyph-edit.svg' width='16' height='16'></a>";
+                        echo "</td>";
+                        echo "</tr>";
+                    }
+                    ?>
+                    </tbody>
+                </table>
                 <!--fim do conteúdo-->
             </div>
         </div>
@@ -218,15 +232,15 @@ if(isset($_GET['id'])){
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Pronto para sair?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-body">Clique em "Sair" abaixo se estiver pronto para encerrar a sessão atual.</div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <a class="btn btn-primary" href="../controllers/logout.php">Sair</a>
                 </div>
             </div>
         </div>

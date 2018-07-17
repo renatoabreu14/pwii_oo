@@ -1,10 +1,21 @@
 <?php
 
-require_once "../controllers/ControllerCliente.php";
+require_once "../models/Marca.class.php";
+require_once "../controllers/ControllerMarca.php";
 
-$cliente = new Cliente();
+
+$marca = new Marca();
+
+if (isset($_POST['enviar'])){
+    $marca->setId($_POST['id']);
+    $marca->setDescricao($_POST['descricao']);
+
+    ControllerMarca::salvar($marca);
+    header('Location: lista_marcas.php');
+}
+
 if(isset($_GET['id'])){
-    $cliente = ControllerCliente::buscarCliente($_GET['id']);
+    $marca = ControllerMarca::buscarMarca($_GET['id']);
 }
 
 
@@ -178,24 +189,22 @@ if(isset($_GET['id'])){
         <div class="row">
             <div class="col-12">
                 <!-- aqui é o conteúdo do site-->
-                    <?php
-                        if ($cliente->getId() <= 0){
-                            echo "<h3>Nenhum cliente foi encontrado</h3>";
-                        }else{
-                            echo "<label class='text-dark'><b>Código:</b>&nbsp;</label>";
-                            echo utf8_decode($cliente->getId());
-                            echo "<br>";
-                            echo "<label><b>Nome:</b>&nbsp;</label>";
-                            echo utf8_decode($cliente->getNome());
-                            echo "<br>";
-                            echo "<label><b>Email:</b>&nbsp;</label>";
-                            echo utf8_decode($cliente->getEmail());
-                            echo "<label><b>Estado Civil:</b>&nbsp;</label>";
-                            echo utf8_decode($cliente->getEstCivil()->getDescricao());
-                        }
-                    ?>
-                <br>
-                <a href="lista_clientes.php" class="btn btn-light">Voltar</a>
+                <div class="col-10 offset-1">
+                    <form action="#" method="post">
+                        <input type="hidden" name="id" value="<?php echo $marca->getId();?>">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label class="label">Descrição</label>
+                                <input type="text" name="descricao" placeholder="Marca" class="form-control" value="<?php echo $marca->getDescricao();?>">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <button type="submit" class="btn btn-success" name="enviar">Enviar</button>&nbsp;
+                            <a href="lista_marcas.php" class="btn btn-light">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
                 <!--fim do conteúdo-->
             </div>
         </div>

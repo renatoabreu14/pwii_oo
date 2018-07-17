@@ -57,12 +57,30 @@ $listaProfissao = ControllerProfissao::buscarTodos();
     </button>
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Cadastro de Cliente">
-          <a class="nav-link" href="cad_cliente.php">
-            <!--<i class="fa fa-fw fa-dashboard"></i>-->
-            <span class="nav-link-text">Cadastro de Cliente</span>
-          </a>
-        </li><!-- aqui é o meu menu-->
+          <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Cadastro de Cliente">
+              <a class="nav-link" href="lista_clientes.php">
+                  <!--<i class="fa fa-fw fa-dashboard"></i>-->
+                  <span class="nav-link-text">Gerenciar Clientes</span>
+              </a>
+          </li>
+          <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Cadastro de Cliente">
+              <a class="nav-link" href="lista_produtos.php">
+                  <!--<i class="fa fa-fw fa-dashboard"></i>-->
+                  <span class="nav-link-text">Gerenciar Produtos</span>
+              </a>
+          </li>
+          <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Cadastro de Cliente">
+              <a class="nav-link" href="lista_categorias.php">
+                  <!--<i class="fa fa-fw fa-dashboard"></i>-->
+                  <span class="nav-link-text">Gerenciar Categorias de Produtos</span>
+              </a>
+          </li>
+          <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Cadastro de Cliente">
+              <a class="nav-link" href="lista_marcas.php">
+                  <!--<i class="fa fa-fw fa-dashboard"></i>-->
+                  <span class="nav-link-text">Gerenciar Marca de Produtos</span>
+              </a>
+          </li><!-- aqui é o meu menu-->
       </ul>
       <ul class="navbar-nav sidenav-toggler">
         <li class="nav-item">

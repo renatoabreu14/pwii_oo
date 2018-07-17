@@ -1,6 +1,7 @@
 <?php
 
 require_once "../controllers/ControllerCliente.php";
+require_once "../controllers/verificalogin.php";
 
 if(isset($_GET['id'])){
     ControllerCliente::excluir($_GET['id']);
@@ -38,9 +39,27 @@ $lista = ControllerCliente::buscarTodos();
     <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
             <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Cadastro de Cliente">
-                <a class="nav-link" href="cad_cliente.php">
+                <a class="nav-link" href="lista_clientes.php">
                     <!--<i class="fa fa-fw fa-dashboard"></i>-->
-                    <span class="nav-link-text">Cadastro de Cliente</span>
+                    <span class="nav-link-text">Gerenciar Clientes</span>
+                </a>
+            </li>
+            <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Cadastro de Cliente">
+                <a class="nav-link" href="lista_produtos.php">
+                    <!--<i class="fa fa-fw fa-dashboard"></i>-->
+                    <span class="nav-link-text">Gerenciar Produtos</span>
+                </a>
+            </li>
+            <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Cadastro de Cliente">
+                <a class="nav-link" href="lista_categorias.php">
+                    <!--<i class="fa fa-fw fa-dashboard"></i>-->
+                    <span class="nav-link-text">Gerenciar Categorias de Produtos</span>
+                </a>
+            </li>
+            <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Cadastro de Cliente">
+                <a class="nav-link" href="lista_marcas.php">
+                    <!--<i class="fa fa-fw fa-dashboard"></i>-->
+                    <span class="nav-link-text">Gerenciar Marca de Produtos</span>
                 </a>
             </li><!-- aqui é o meu menu-->
         </ul>
@@ -213,15 +232,15 @@ $lista = ControllerCliente::buscarTodos();
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Pronto para sair?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-body">Clique em "Sair" abaixo se estiver pronto para encerrar a sessão atual.</div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <a class="btn btn-primary" href="../controllers/logout.php">Sair</a>
                 </div>
             </div>
         </div>

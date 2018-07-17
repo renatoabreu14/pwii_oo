@@ -1,11 +1,29 @@
 <?php
 
-require_once "../controllers/ControllerCliente.php";
+require_once "../models/Produto.class.php";
+require_once "../controllers/ControllerProduto.php";
+require_once "../controllers/ControllerMarca.php";
+require_once "../controllers/ControllerCategoria.php";
 
-$cliente = new Cliente();
-if(isset($_GET['id'])){
-    $cliente = ControllerCliente::buscarCliente($_GET['id']);
+$produto = new Produto();
+
+if (isset($_POST['enviar'])){
+    $produto->setId($_POST['id']);
+    $produto->setDescricao($_POST['descricao']);
+    $produto->setEstoque($_POST['estoque']);
+    $produto->setValorUnit($_POST['valorunit']);
+    $produto->getMarca()->setId($_POST['marca']);
+    $produto->getCategoria()->setId($_POST['categoria']);
+    ControllerProduto::salvar($produto);
+    header('Location: lista_produtos.php');
 }
+
+if(isset($_GET['id'])){
+    $produto = ControllerProduto::buscarProduto($_GET['id']);
+}
+
+$listaMarca = ControllerMarca::buscarTodos();
+$listaCategoria = ControllerCategoria::buscarTodos();
 
 
 ?>
@@ -178,24 +196,61 @@ if(isset($_GET['id'])){
         <div class="row">
             <div class="col-12">
                 <!-- aqui é o conteúdo do site-->
-                    <?php
-                        if ($cliente->getId() <= 0){
-                            echo "<h3>Nenhum cliente foi encontrado</h3>";
-                        }else{
-                            echo "<label class='text-dark'><b>Código:</b>&nbsp;</label>";
-                            echo utf8_decode($cliente->getId());
-                            echo "<br>";
-                            echo "<label><b>Nome:</b>&nbsp;</label>";
-                            echo utf8_decode($cliente->getNome());
-                            echo "<br>";
-                            echo "<label><b>Email:</b>&nbsp;</label>";
-                            echo utf8_decode($cliente->getEmail());
-                            echo "<label><b>Estado Civil:</b>&nbsp;</label>";
-                            echo utf8_decode($cliente->getEstCivil()->getDescricao());
-                        }
-                    ?>
-                <br>
-                <a href="lista_clientes.php" class="btn btn-light">Voltar</a>
+                <div class="col-10 offset-1">
+                    <form action="#" method="post">
+                        <input type="hidden" name="id" value="<?php echo $produto->getId();?>">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label class="label">Descrição</label>
+                                <input type="text" name="descricao" placeholder="Descrição" class="form-control" value="<?php echo $produto->getDescricao();?>">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-6">
+                                <label class="label">Estoque</label>
+                                <input type="text" name="estoque" placeholder="Qtde. Estoque" class="form-control" value="<?php echo $produto->getEstoque();?>">
+                            </div>
+                            <div class="col-6">
+                                <label class="label">Valor Unitário</label>
+                                <input type="text" name="valorunit" placeholder="Vlr. Unitário" class="form-control" value="<?php echo $produto->getValorUnit();?>">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-6">
+                                <label class="label">Marca</label>
+                                <select name="marca" class="form-control">
+                                    <?php
+                                    foreach ($listaMarca as $marca){
+                                        if ($produto->getMarca()->getId() == $marca->getId()){
+                                            echo "<option value='".$marca->getId()."' selected>".$marca->getDescricao()."</option>";
+                                        }else{
+                                            echo "<option value='".$marca->getId()."'>".$marca->getDescricao()."</option>";
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="label">Categoria</label>
+                                <select name="categoria" class="form-control">
+                                    <?php
+                                    foreach ($listaCategoria as $categoria){
+                                        if ($produto->getCategoria()->getId() == $categoria->getId()){
+                                            echo "<option value='".$categoria->getId()."' selected>".$categoria->getDescricao()."</option>";
+                                        }else{
+                                            echo "<option value='".$categoria->getId()."'>".$categoria->getDescricao()."</option>";
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <button type="submit" class="btn btn-success" name="enviar">Enviar</button>&nbsp;
+                            <a href="lista_produtos.php" class="btn btn-light">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
                 <!--fim do conteúdo-->
             </div>
         </div>

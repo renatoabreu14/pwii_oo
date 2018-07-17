@@ -1,13 +1,13 @@
 <?php
 
-require_once "../controllers/ControllerCliente.php";
+require_once "../controllers/ControllerMarca.php";
 
-$cliente = new Cliente();
 if(isset($_GET['id'])){
-    $cliente = ControllerCliente::buscarCliente($_GET['id']);
+    ControllerMarca::excluir($_GET['id']);
+    header('Location: lista_marcas.php');
 }
 
-
+$lista = ControllerMarca::buscarTodos();
 ?>
 
 <!DOCTYPE html>
@@ -178,24 +178,33 @@ if(isset($_GET['id'])){
         <div class="row">
             <div class="col-12">
                 <!-- aqui é o conteúdo do site-->
-                    <?php
-                        if ($cliente->getId() <= 0){
-                            echo "<h3>Nenhum cliente foi encontrado</h3>";
-                        }else{
-                            echo "<label class='text-dark'><b>Código:</b>&nbsp;</label>";
-                            echo utf8_decode($cliente->getId());
-                            echo "<br>";
-                            echo "<label><b>Nome:</b>&nbsp;</label>";
-                            echo utf8_decode($cliente->getNome());
-                            echo "<br>";
-                            echo "<label><b>Email:</b>&nbsp;</label>";
-                            echo utf8_decode($cliente->getEmail());
-                            echo "<label><b>Estado Civil:</b>&nbsp;</label>";
-                            echo utf8_decode($cliente->getEstCivil()->getDescricao());
-                        }
-                    ?>
+                <div class="col2">
+                    <a href="cad_marca.php" class="btn btn-success">Novo</a>
+                </div>
                 <br>
-                <a href="lista_clientes.php" class="btn btn-light">Voltar</a>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th width="80%">Descrição</th>
+                        <th width="20%">-</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    foreach ($lista as $marca){
+                        echo "<tr>";
+                        echo "<td width=\"80%\">".utf8_decode($marca->getDescricao())."</td>";
+                        echo "<td width=\"20%\">";
+                        echo "<a href='lista_marcas.php?id=".$marca->getId()."' class='btn btn-light' title='Excluir' alt='Excluir'>
+                                            <img src='../svg/si-glyph-delete.svg' width='16' height='16'></a>";
+                        echo "<a href='cad_marca.php?id=".$marca->getId()."' class='btn btn-light' title='Editar' alt='Editar'>
+                                            <img src='../svg/si-glyph-edit.svg' width='16' height='16'></a>";
+                        echo "</td>";
+                        echo "</tr>";
+                    }
+                    ?>
+                    </tbody>
+                </table>
                 <!--fim do conteúdo-->
             </div>
         </div>
